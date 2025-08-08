@@ -7,8 +7,7 @@ from config import config
 import myNotebook as nb
 from ttkHyperlinkLabel import HyperlinkLabel
 from utils import (
-    CFG_TRACK_TRADING, CFG_TRACK_COMBAT, CFG_TRACK_EXPLORATION, CFG_TRACK_MISSIONS,
-    CFG_SHOW_TRADING, CFG_SHOW_COMBAT, CFG_SHOW_EXPLORATION, CFG_SHOW_MISSIONS,
+    CFG_TRACK_TRADING, CFG_TRACK_COMBAT, CFG_TRACK_EXPLORATION, CFG_TRACK_MISSIONS, CFG_TRACK_MAINTENANCE,
     CFG_RESET_ON_CLOSE, get_config_bool, log_debug, log_warning
 )
 
@@ -21,12 +20,7 @@ class PreferencesManager:
         self.cached_track_combat = True
         self.cached_track_exploration = True
         self.cached_track_missions = True
-
-        # Cached show settings (updated only when preferences change)
-        self.cached_show_trading = True
-        self.cached_show_combat = True
-        self.cached_show_exploration = True
-        self.cached_show_missions = True
+        self.cached_track_maintenance = True
 
         # Reset on close setting
         self.cached_reset_on_close = True
@@ -36,10 +30,7 @@ class PreferencesManager:
         self.track_combat = None
         self.track_exploration = None
         self.track_missions = None
-        self.show_trading = None
-        self.show_combat = None
-        self.show_exploration = None
-        self.show_missions = None
+        self.track_maintenance = None
         self.reset_on_close = None
 
     def load_settings(self):
@@ -48,11 +39,7 @@ class PreferencesManager:
         self.cached_track_combat = get_config_bool(config, CFG_TRACK_COMBAT)
         self.cached_track_exploration = get_config_bool(config, CFG_TRACK_EXPLORATION)
         self.cached_track_missions = get_config_bool(config, CFG_TRACK_MISSIONS)
-
-        self.cached_show_trading = get_config_bool(config, CFG_SHOW_TRADING)
-        self.cached_show_combat = get_config_bool(config, CFG_SHOW_COMBAT)
-        self.cached_show_exploration = get_config_bool(config, CFG_SHOW_EXPLORATION)
-        self.cached_show_missions = get_config_bool(config, CFG_SHOW_MISSIONS)
+        self.cached_track_maintenance = get_config_bool(config, CFG_TRACK_MAINTENANCE)
 
         self.cached_reset_on_close = get_config_bool(config, CFG_RESET_ON_CLOSE)
 
@@ -100,6 +87,13 @@ class PreferencesManager:
                       variable=self.track_missions,
                       background=nb.Label().cget('background')).grid(row=5, column=0, sticky=tk.W)
 
+        # Maintenance tracking
+        self.track_maintenance = tk.BooleanVar(value=self.cached_track_maintenance)
+        tk.Checkbutton(frame,
+                      text="Maintenance (Fuel, Repairs, Ammo, etc.)",
+                      variable=self.track_maintenance,
+                      background=nb.Label().cget('background')).grid(row=6, column=0, sticky=tk.W)
+
         # Divider
         from tkinter import ttk
         separator = ttk.Separator(frame, orient='horizontal')
@@ -112,38 +106,6 @@ class PreferencesManager:
                       variable=self.reset_on_close,
                       background=nb.Label().cget('background')).grid(row=7, column=0, sticky=tk.W, pady=(0, 10))
 
-        # Right column - Show options
-        nb.Label(frame, text="Show in Display:",
-                background=nb.Label().cget('background')).grid(row=1, column=1, sticky=tk.W, pady=(0, 5), padx=(20, 0))
-
-        # Trading show
-        self.show_trading = tk.BooleanVar(value=self.cached_show_trading)
-        tk.Checkbutton(frame,
-                      text="Trading (Market Buy/Sell, Trade Data)",
-                      variable=self.show_trading,
-                      background=nb.Label().cget('background')).grid(row=2, column=1, sticky=tk.W, padx=(20, 0))
-
-        # Combat show
-        self.show_combat = tk.BooleanVar(value=self.cached_show_combat)
-        tk.Checkbutton(frame,
-                      text="Combat (Bounties, Vouchers)",
-                      variable=self.show_combat,
-                      background=nb.Label().cget('background')).grid(row=3, column=1, sticky=tk.W, padx=(20, 0))
-
-        # Exploration show
-        self.show_exploration = tk.BooleanVar(value=self.cached_show_exploration)
-        tk.Checkbutton(frame,
-                      text="Exploration (Sell Exploration Data)",
-                      variable=self.show_exploration,
-                      background=nb.Label().cget('background')).grid(row=4, column=1, sticky=tk.W, padx=(20, 0))
-
-        # Missions show
-        self.show_missions = tk.BooleanVar(value=self.cached_show_missions)
-        tk.Checkbutton(frame,
-                      text="Missions (Rewards, Community Goals)",
-                      variable=self.show_missions,
-                      background=nb.Label().cget('background')).grid(row=5, column=1, sticky=tk.W, padx=(20, 0))
-
         return frame
 
     def save_settings(self):
@@ -153,24 +115,15 @@ class PreferencesManager:
         config.set(CFG_TRACK_COMBAT, self.track_combat.get())
         config.set(CFG_TRACK_EXPLORATION, self.track_exploration.get())
         config.set(CFG_TRACK_MISSIONS, self.track_missions.get())
+        config.set(CFG_TRACK_MAINTENANCE, self.track_maintenance.get())
         config.set(CFG_RESET_ON_CLOSE, self.reset_on_close.get())
-
-        # Save show settings
-        config.set(CFG_SHOW_TRADING, self.show_trading.get())
-        config.set(CFG_SHOW_COMBAT, self.show_combat.get())
-        config.set(CFG_SHOW_EXPLORATION, self.show_exploration.get())
-        config.set(CFG_SHOW_MISSIONS, self.show_missions.get())
 
         # Update cached settings
         self.cached_track_trading = self.track_trading.get()
         self.cached_track_combat = self.track_combat.get()
         self.cached_track_exploration = self.track_exploration.get()
         self.cached_track_missions = self.track_missions.get()
+        self.cached_track_maintenance = self.track_maintenance.get()
         self.cached_reset_on_close = self.reset_on_close.get()
-
-        self.cached_show_trading = self.show_trading.get()
-        self.cached_show_combat = self.show_combat.get()
-        self.cached_show_exploration = self.show_exploration.get()
-        self.cached_show_missions = self.show_missions.get()
 
         log_debug("Income Tracker Plugin preferences saved")

@@ -23,10 +23,8 @@ CFG_TRACK_TRADING = "EDMCIncome_track_trading"
 CFG_TRACK_COMBAT = "EDMCIncome_track_combat"
 CFG_TRACK_EXPLORATION = "EDMCIncome_track_exploration"
 CFG_TRACK_MISSIONS = "EDMCIncome_track_missions"
-CFG_SHOW_TRADING = "EDMCIncome_show_trading"
-CFG_SHOW_COMBAT = "EDMCIncome_show_combat"
-CFG_SHOW_EXPLORATION = "EDMCIncome_show_exploration"
-CFG_SHOW_MISSIONS = "EDMCIncome_show_missions"
+CFG_TRACK_MAINTENANCE = "EDMCIncome_track_maintenance"
+
 CFG_RESET_ON_CLOSE = "EDMCIncome_reset_on_close"
 
 # Module globals

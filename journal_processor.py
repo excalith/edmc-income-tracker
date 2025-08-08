@@ -48,6 +48,7 @@ class JournalProcessor:
         track_combat = self.preferences.cached_track_combat
         track_exploration = self.preferences.cached_track_exploration
         track_missions = self.preferences.cached_track_missions
+        track_maintenance = self.preferences.cached_track_maintenance
 
         # Trading events
         if track_trading:
@@ -67,6 +68,8 @@ class JournalProcessor:
         if track_exploration:
             if event == "SellExplorationData":
                 self.income_tracker.transaction(entry["TotalEarnings"], "exploration")
+            elif event == "BuyExplorationData":
+                self.income_tracker.transaction(-entry["Cost"], "exploration")
 
         # Mission events
         if track_missions:
@@ -78,23 +81,28 @@ class JournalProcessor:
             elif event == "CommunityGoalReward":
                 self.income_tracker.transaction(entry["Reward"], "missions")
 
-        # Credits events (always tracked)
-        if event == "Credits":
-            log_debug(f"Processing Credits event: {entry}")
+        # Maintenance events
+        if track_maintenance:
+            if event == "RefuelAll":
+                self.income_tracker.transaction(-entry["Cost"], "maintenance")
+            elif event == "RefuelPartial":
+                self.income_tracker.transaction(-entry["Cost"], "maintenance")
+            elif event == "Repair":
+                self.income_tracker.transaction(-entry["Cost"], "maintenance")
+            elif event == "RepairAll":
+                self.income_tracker.transaction(-entry["Cost"], "maintenance")
+            elif event == "BuyAmmo":
+                self.income_tracker.transaction(-entry["Cost"], "maintenance")
+            elif event == "BuyDrones":
+                self.income_tracker.transaction(-entry["TotalCost"], "maintenance")
+            elif event == "SellDrones":
+                self.income_tracker.transaction(-entry["TotalSale"], "maintenance")
+            elif event == "RestockVehicle":
+                self.income_tracker.transaction(-entry["Cost"], "maintenance")
+            elif event == "Resurrect":
+                self.income_tracker.transaction(-entry["Cost"], "maintenance")
 
-            # Check if state contains the actual credit balance
-            if 'Credits' in state:
-                credits_balance = state['Credits']
-                log_debug(f"Using state credits balance: {credits_balance:,.0f} Cr")
 
-                # Update the UI with the actual balance from state
-                if self.income_tracker.ui:
-                    self.income_tracker.ui.update_credits_from_state(credits_balance)
-
-                return f"Event: {event} - Balance: {credits_balance:,.0f} Cr"
-            else:
-                log_debug(f"Credits event but no state credits available: {entry}")
-                return f"Event: {event} - No state data"
 
         # Docking events (always tracked for rate calculation)
         if event == "Docked":

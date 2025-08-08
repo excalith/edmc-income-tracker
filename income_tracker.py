@@ -80,11 +80,6 @@ class EDMCIncome:
         if self.ui:
             self.ui.update_display()
 
-    def update_widget_visibility(self):
-        """Update the visibility of category widgets based on Show settings"""
-        if self.ui:
-            self.ui.update_widget_visibility()
-
     def update_breakdown_visibility(self):
         """Update the visibility of the entire category breakdown section"""
         if self.ui:
