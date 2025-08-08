@@ -2,6 +2,9 @@
 
 An Elite Dangerous Market Connector (EDMC) plugin for tracking income and earnings from various activities in Elite Dangerous.
 
+> [!IMPORTANT]
+> This plugin is a work in progress and is not yet ready for production use.
+
 ## Features
 
 - Track income from trading, combat, exploration, and missions
