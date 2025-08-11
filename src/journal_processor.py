@@ -26,6 +26,15 @@ class JournalProcessor:
         Returns:
             String description of the event processed
         """
+                # Log state information for debugging
+        if 'Credits' in state:
+            log_debug(f"[CREDITS] State contains Credits: {state['Credits']:,}")
+            # Update income tracker with current credits
+            self.income_tracker.update_credits(state['Credits'])
+
+        if 'IsDocked' in state:
+            log_debug(f"[STATE] IsDocked: {state['IsDocked']}")
+
         if "event" not in entry:
             return "No event found"
 

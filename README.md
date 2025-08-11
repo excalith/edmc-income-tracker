@@ -11,16 +11,14 @@ An Elite Dangerous Market Connector (EDMC) plugin for tracking income and earnin
 - Calculate hourly earning rates
 - Persistent earnings tracking across sessions
 - Configurable display options
-- Category breakdown view
+- Category breakdown view for Trading, Exploration, Combat, and Missions
 
 ## Installation
 
-1. Clone or download this repository
-2. Place the entire folder in your EDMC plugins directory
-3. Restart EDMC
-4. The plugin will appear as "Income Tracker" in the status bar
+1. Clone or [Download](https://github.com/excalith/edmc-income-tracker/releases) the latest release from the
+2. Unzip the folder in your EDMC plugins directory
+3. Restart EDMC to reload the plugins
 
-
-## Events
-https://elite-journal.readthedocs.io
-https://edcodex.info/?m=doc
+## Journal Events References
+- [Elite Journal](https://elite-journal.readthedocs.io)
+- [EDCodex](https://edcodex.info/?m=doc)

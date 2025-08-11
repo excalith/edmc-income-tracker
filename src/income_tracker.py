@@ -14,6 +14,7 @@ class EDMCIncome:
         self.ui = ui_manager
         self.saved_earnings = 0.0
         self.transactions = []
+        self.current_credits = 0
 
     def reset(self):
         """Reset all tracking data (current session + previous sessions)"""
@@ -95,6 +96,17 @@ class EDMCIncome:
         """Update the display widgets"""
         if self.ui:
             self.ui.update_display()
+
+    def update_credits(self, credits: int):
+        """Update current credit balance from journal state"""
+        if self.current_credits != credits:
+            log_debug(f"[CREDITS] Credits updated: {self.current_credits:,} -> {credits:,}")
+            self.current_credits = credits
+            self.update_window()
+
+    def get_current_credits(self) -> int:
+        """Get current credit balance"""
+        return self.current_credits
 
     def update_breakdown_visibility(self):
         """Update the visibility of the entire category breakdown section"""

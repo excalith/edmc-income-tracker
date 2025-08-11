@@ -94,6 +94,11 @@ class IncomeTrackerUI:
             self.maintenance_label.grid_remove()
             self.maintenance_widget.grid_remove()
 
+        # Hide total credits in compact mode (or if preference disabled)
+        if hasattr(self, 'total_credits_label') and hasattr(self, 'total_credits_widget'):
+            self.total_credits_label.grid_remove()
+            self.total_credits_widget.grid_remove()
+
         # Hide the breakdown toggle checkbox
         if hasattr(self, 'show_breakdown'):
             # Find and hide the checkbox widget
@@ -123,6 +128,15 @@ class IncomeTrackerUI:
         if hasattr(self, 'maintenance_label') and hasattr(self, 'maintenance_widget'):
             self.maintenance_label.grid()
             self.maintenance_widget.grid()
+
+        # Show total credits in full view (only if preference allows)
+        if hasattr(self, 'total_credits_label') and hasattr(self, 'total_credits_widget'):
+            if self.preferences.cached_show_total_credits:
+                self.total_credits_label.grid()
+                self.total_credits_widget.grid()
+            else:
+                self.total_credits_label.grid_remove()
+                self.total_credits_widget.grid_remove()
 
         # Show the breakdown toggle checkbox
         if hasattr(self, 'show_breakdown'):
@@ -171,21 +185,28 @@ class IncomeTrackerUI:
         self._create_category_row(frame, "Income", "earned", 2)
         self._create_category_row(frame, "Maintenance", "maintenance", 3)
 
+        # Total Credits (between Maintenance and Income Breakdown)
+        self._create_category_row(frame, "Total", "total_credits", 4, "0 Cr")
+        # Set initial visibility based on preference
+        if not self.preferences.cached_show_total_credits:
+            self.total_credits_label.grid_remove()
+            self.total_credits_widget.grid_remove()
+
         # Category breakdown toggle
         self.show_breakdown = tk.BooleanVar(value=False)
         breakdown_toggle = tk.Checkbutton(frame, text="Income Breakdown",
                                         variable=self.show_breakdown,
                                         command=self.income_tracker.update_breakdown_visibility,
                                         foreground="#ff8000")
-        breakdown_toggle.grid(row=4, column=0, columnspan=3, sticky=tk.W, pady=(0, 5))
+        breakdown_toggle.grid(row=5, column=0, columnspan=3, sticky=tk.W, pady=(0, 5))
 
     def _create_category_breakdown(self, frame):
         """Create the category breakdown section"""
         # Create all category rows
-        self._create_category_row(frame, "Trading", "trading", 5)
-        self._create_category_row(frame, "Combat", "combat", 6)
-        self._create_category_row(frame, "Exploration", "exploration", 7)
-        self._create_category_row(frame, "Missions", "missions", 8)
+        self._create_category_row(frame, "Trading", "trading", 6)
+        self._create_category_row(frame, "Combat", "combat", 7)
+        self._create_category_row(frame, "Exploration", "exploration", 8)
+        self._create_category_row(frame, "Missions", "missions", 9)
 
         # Set initial visibility based on breakdown toggle
         if self.show_breakdown.get():
@@ -229,6 +250,12 @@ class IncomeTrackerUI:
             msg = f"{Locale.string_from_number(maintenance_total, 2)} Cr"
             self.maintenance_widget.after(0, self.maintenance_widget.config, {"text": msg})
 
+        # Update Total Credits
+        if hasattr(self, 'total_credits_widget'):
+            current_credits = self.income_tracker.get_current_credits()
+            msg = f"{Locale.string_from_number(current_credits, 0)} Cr"
+            self.total_credits_widget.after(0, self.total_credits_widget.config, {"text": msg})
+
     def _show_income_ui(self):
         """Show the normal income UI elements"""
         # Hide no sources message first to avoid layout conflicts
@@ -252,6 +279,11 @@ class IncomeTrackerUI:
         if hasattr(self, 'maintenance_label') and hasattr(self, 'maintenance_widget'):
             self.maintenance_label.grid_remove()
             self.maintenance_widget.grid_remove()
+
+        # Hide total credits
+        if hasattr(self, 'total_credits_label') and hasattr(self, 'total_credits_widget'):
+            self.total_credits_label.grid_remove()
+            self.total_credits_widget.grid_remove()
 
         # Hide the breakdown toggle checkbox
         if hasattr(self, 'show_breakdown'):
@@ -335,3 +367,19 @@ class IncomeTrackerUI:
         log_debug("Refreshing view mode")
         # Update the entire display to handle preference changes properly
         self.update_display()
+
+    def refresh_total_credits_visibility(self):
+        """Refresh total credits visibility based on preference"""
+        if hasattr(self, 'total_credits_label') and hasattr(self, 'total_credits_widget'):
+            if self.preferences.cached_show_total_credits:
+                # Only show if we're in full view mode
+                if self.preferences.cached_view_mode == "full":
+                    self.total_credits_label.grid()
+                    self.total_credits_widget.grid()
+                else:
+                    self.total_credits_label.grid_remove()
+                    self.total_credits_widget.grid_remove()
+            else:
+                # Always hide if preference is disabled
+                self.total_credits_label.grid_remove()
+                self.total_credits_widget.grid_remove()

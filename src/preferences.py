@@ -9,7 +9,7 @@ import myNotebook as nb
 from ttkHyperlinkLabel import HyperlinkLabel
 from src.constants import (
     CFG_TRACK_TRADING, CFG_TRACK_COMBAT, CFG_TRACK_EXPLORATION, CFG_TRACK_MISSIONS,
-    CFG_RESET_ON_CLOSE
+    CFG_RESET_ON_CLOSE, CFG_SHOW_TOTAL_CREDITS
 )
 from src.utils import get_config_bool, log_debug, log_warning, Tooltip
 
@@ -30,6 +30,9 @@ class PreferencesManager:
         # View mode setting
         self.cached_view_mode = "full"
 
+        # Show Total Credits setting
+        self.cached_show_total_credits = True
+
         # UI variables
         self.track_trading = None
         self.track_combat = None
@@ -37,6 +40,7 @@ class PreferencesManager:
         self.track_missions = None
         self.reset_on_close = None
         self.view_mode = None
+        self.show_total_credits = None
 
     def load_settings(self):
         """Load settings from config"""
@@ -49,6 +53,7 @@ class PreferencesManager:
         self.cached_reset_on_close = get_config_bool(config, CFG_RESET_ON_CLOSE, default=True)
 
         self.cached_view_mode = config.get_str("view_mode", default="full")
+        self.cached_show_total_credits = get_config_bool(config, CFG_SHOW_TOTAL_CREDITS, default=True)
 
     def create_preferences_ui(self, parent):
         """Create the preferences UI"""
@@ -114,21 +119,29 @@ class PreferencesManager:
         view_dropdown.grid(row=2, column=1, sticky=tk.W, pady=(0, 5))
         Tooltip(view_dropdown, "Full: Shows all information including maintenance and category breakdown\nCompact: Shows only essential information (title, reset, hourly, income)")
 
+        # Show Total Credits option
+        self.show_total_credits = tk.BooleanVar(value=self.cached_show_total_credits)
+        show_total_credits_cb = nb.Checkbutton(frame,
+                                             text="Display current credit balance",
+                                             variable=self.show_total_credits)
+        show_total_credits_cb.grid(row=3, column=0, sticky=tk.W, pady=(0, 5))
+        Tooltip(show_total_credits_cb, "Shows your current credit balance")
+
         # Reset data on close
         self.reset_on_close = tk.BooleanVar(value=self.cached_reset_on_close)
         reset_cb = nb.Checkbutton(frame,
                       text="Reset data on close",
                       variable=self.reset_on_close)
-        reset_cb.grid(row=3, column=0, columnspan=2, sticky=tk.W, pady=(0, 10))
+        reset_cb.grid(row=4, column=0, columnspan=2, sticky=tk.W, pady=(0, 10))
         Tooltip(reset_cb, "When enabled, all current session earnings will be reset when EDMC is closed.\nWhen disabled, earnings persist between sessions.")
         #endregion
 
         # Divider
         separator = ttk.Separator(frame, orient=tk.HORIZONTAL)
-        separator.grid(row=4, column=0, columnspan=2, sticky=(tk.W, tk.E), pady=10)
+        separator.grid(row=5, column=0, columnspan=2, sticky=(tk.W, tk.E), pady=10)
 
         #region Tracker Settings
-        nb.Label(frame, text="Track Income From:", font=("TkDefaultFont", 9, "bold")).grid(row=5, column=0, columnspan=2, sticky=tk.W, pady=(0, 5))
+        nb.Label(frame, text="Track Income From:", font=("TkDefaultFont", 9, "bold")).grid(row=6, column=0, columnspan=2, sticky=tk.W, pady=(0, 5))
 
         # Define tracking options with their data
         tracking_options = [
@@ -139,7 +152,7 @@ class PreferencesManager:
         ]
 
         # Create checkboxes
-        for i, (text, var_name, tooltip_text) in enumerate(tracking_options, start=6):
+        for i, (text, var_name, tooltip_text) in enumerate(tracking_options, start=7):
             # Create the BooleanVar with the cached value
             cached_value = getattr(self, f"cached_{var_name}")
             var = tk.BooleanVar(value=cached_value)
@@ -164,6 +177,8 @@ class PreferencesManager:
         config.set(CFG_TRACK_EXPLORATION, self.track_exploration.get())
         config.set(CFG_TRACK_MISSIONS, self.track_missions.get())
         config.set(CFG_RESET_ON_CLOSE, self.reset_on_close.get())
+        config.set(CFG_SHOW_TOTAL_CREDITS, self.show_total_credits.get())
+
         # Convert display text back to internal key for view mode
         view_mode_options = {
             "Full View - All Information": "full",
@@ -178,6 +193,7 @@ class PreferencesManager:
         self.cached_track_exploration = self.track_exploration.get()
         self.cached_track_missions = self.track_missions.get()
         self.cached_reset_on_close = self.reset_on_close.get()
+        self.cached_show_total_credits = self.show_total_credits.get()
         self.cached_view_mode = internal_view_mode
 
         log_debug("Income Tracker Plugin preferences saved")

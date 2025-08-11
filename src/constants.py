@@ -13,8 +13,9 @@ GITHUB_API_URL = "https://api.github.com/repos/excalith/edmc-income-tracker/rele
 
 # Configuration keys
 CFG_EARNINGS = "EDMCIncome_earnings"
+CFG_RESET_ON_CLOSE = "EDMCIncome_reset_on_close"
+CFG_SHOW_TOTAL_CREDITS = "EDMCIncome_show_total_credits"
 CFG_TRACK_TRADING = "EDMCIncome_track_trading"
 CFG_TRACK_COMBAT = "EDMCIncome_track_combat"
 CFG_TRACK_EXPLORATION = "EDMCIncome_track_exploration"
 CFG_TRACK_MISSIONS = "EDMCIncome_track_missions"
-CFG_RESET_ON_CLOSE = "EDMCIncome_reset_on_close"
