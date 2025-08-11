@@ -11,7 +11,7 @@ GITHUB_REPO_URL = "https://github.com/excalith/edmc-income-tracker"
 GITHUB_API_URL = "https://api.github.com/repos/excalith/edmc-income-tracker/releases/latest"
 #GITHUB_API_URL = "https://api.github.com/repos/excalith/excalith-start-page/releases/latest" #TEST URL WITH RELEASES
 
-# Configuration keys
+# Configuration Keys
 CFG_EARNINGS = "EDMCIncome_earnings"
 CFG_RESET_ON_CLOSE = "EDMCIncome_reset_on_close"
 CFG_SHOW_TOTAL_CREDITS = "EDMCIncome_show_total_credits"
@@ -33,4 +33,49 @@ UI_ELEMENT_STATES = {
 	"combat": {"show_in": ["full"], "enabled": "track_combat", "requires": "show_breakdown"},
 	"exploration": {"show_in": ["full"], "enabled": "track_exploration", "requires": "show_breakdown"},
 	"missions": {"show_in": ["full"], "enabled": "track_missions", "requires": "show_breakdown"},
+}
+
+# Event to category mappings for journal processing
+# Journal Entry Fields
+JOURNAL_FIELDS = {
+    "total_sale":        ["TotalSale"],
+    "total_cost":        ["TotalCost"],
+    "cost":              ["Cost"],
+    "amount":            ["Amount"],
+    "total_earnings":    ["TotalEarnings"],
+    "reward":            ["Reward"],
+    "donation":          ["Donation"],
+}
+
+# Journal Entry Event Mappings
+JOURNAL_EVENT_CATEGORIES = {
+    "trading": {
+        "MarketSell":    (["total_sale"], [1]),
+        "MarketBuy":     (["total_cost"], [-1]),
+        "BuyTradeData":  (["cost"], [-1]),
+    },
+    "combat": {
+        "RedeemVoucher": (["amount"], [1]),
+    },
+    "exploration": {
+        "SellExplorationData": (["total_earnings"], [1]),
+        "BuyExplorationData":  (["cost"], [-1]),
+    },
+    "missions": {
+        # Donation negative, Reward positive. Both are supported if present.
+        "MissionCompleted": (["donation", "reward"], [-1, 1]),
+        "CommunityGoalReward": (["reward"], [1]),
+    },
+    # maintenance: always tracked (no preference toggle)
+    "maintenance": {
+        "RefuelAll":      (["cost"], [-1]),
+        "RefuelPartial":  (["cost"], [-1]),
+        "Repair":         (["cost"], [-1]),
+        "RepairAll":      (["cost"], [-1]),
+        "BuyAmmo":        (["cost"], [-1]),
+        "BuyDrones":      (["total_cost"], [-1]),
+        "SellDrones":     (["total_sale"], [1]),
+        "RestockVehicle": (["cost"], [-1]),
+        "Resurrect":      (["cost"], [-1]),
+    },
 }

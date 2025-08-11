@@ -3,6 +3,7 @@ EDMC Income Tracker Plugin - Journal entry processing
 """
 
 from src.utils import log_debug
+from src.constants import JOURNAL_EVENT_CATEGORIES, JOURNAL_FIELDS
 
 class JournalProcessor:
     """Handles processing of Elite Dangerous journal entries"""
@@ -11,122 +12,56 @@ class JournalProcessor:
         self.income_tracker = income_tracker
         self.preferences = preferences_manager
 
-    def process_journal_entry(self, cmdr: str, is_beta: bool, system: str, station: str, entry: dict, state: dict) -> str:
-        """
-        Process a journal entry and update income tracking
-
-        Args:
-            cmdr: Commander name
-            is_beta: Whether this is a beta game
-            system: Current system
-            station: Current station
-            entry: Journal entry data
-            state: The current game state
-
-        Returns:
-            String description of the event processed
-        """
-                # Log state information for debugging
+    def process_journal_entry(self, cmdr, is_beta, system, station, entry, state):
+        """Process a journal entry and update income tracking."""
+        # Always handle credits state
         if 'Credits' in state:
-            log_debug(f"[CREDITS] State contains Credits: {state['Credits']:,}")
-            # Update income tracker with current credits
+            log_debug(f"[CREDITS] {state['Credits']:,}")
             self.income_tracker.update_credits(state['Credits'])
 
         if 'IsDocked' in state:
             log_debug(f"[STATE] IsDocked: {state['IsDocked']}")
 
-        if "event" not in entry:
+        event = entry.get("event")
+        if not event:
             return "No event found"
 
-        event = entry["event"]
+        prefs = self.preferences
+        track_map = {
+            "trading": prefs.cached_track_trading,
+            "combat": prefs.cached_track_combat,
+            "exploration": prefs.cached_track_exploration,
+            "missions": prefs.cached_track_missions,
+        }
 
-        # Check if tracking is enabled for each category
-        track_trading = self.preferences.cached_track_trading
-        track_combat = self.preferences.cached_track_combat
-        track_exploration = self.preferences.cached_track_exploration
-        track_missions = self.preferences.cached_track_missions
+        for category, events in JOURNAL_EVENT_CATEGORIES.items():
+            if category != "maintenance" and not track_map.get(category, False):
+                continue
 
-        # Debug logging for tracking settings
-        log_debug(f"Tracking settings - Trading: {track_trading}, Combat: {track_combat}, Exploration: {track_exploration}, Missions: {track_missions}, Maintenance: Always enabled")
+            if event not in events:
+                continue
 
-        #region Trading events
-        if track_trading:
-            if event == "MarketSell":
-                self.income_tracker.transaction(entry["TotalSale"], "trading")
-            elif event == "MarketBuy":
-                self.income_tracker.transaction(-entry["TotalCost"], "trading")
-            elif event == "BuyTradeData":
-                self.income_tracker.transaction(-entry["Cost"], "trading")
-        #endregion
+            key_names, signs = events[event]
+            amounts_found = False
 
-        #region Combat events
-        if track_combat:
-            if event == "RedeemVoucher":
-                self.income_tracker.transaction(entry["Amount"], "combat")
-        #endregion
+            for key_name, sign in zip(key_names, signs):
+                journal_key = JOURNAL_FIELDS.get(key_name)
+                if not journal_key:
+                    log_debug(f"Unknown field key: {key_name} in event {event}")
+                    continue
 
-        #region Exploration events
-        if track_exploration:
-            if event == "SellExplorationData":
-                log_debug(f"Processing SellExplorationData event: {entry}")
-                if "TotalEarnings" in entry:
-                    log_debug(f"Processing SellExplorationData (TotalEarnings): {entry['TotalEarnings']:,.0f} Cr")
-                    self.income_tracker.transaction(entry["TotalEarnings"], "exploration")
-            elif event == "BuyExplorationData":
-                log_debug(f"Processing BuyExplorationData: {entry['Cost']:,.0f} Cr")
-                self.income_tracker.transaction(-entry["Cost"], "exploration")
-        #endregion
+                amount = entry.get(journal_key, 0)
+                if amount:
+                    self.income_tracker.transaction(sign * amount, category)
+                    amounts_found = True
 
-        #region Mission events
-        if track_missions:
-            if event == "MissionCompleted":
-                if "Dontation" in entry:
-                    self.income_tracker.transaction(-entry["Dontation"], "missions")
-                else:
-                    self.income_tracker.transaction(entry["Reward"], "missions")
-            elif event == "CommunityGoalReward":
-                self.income_tracker.transaction(entry["Reward"], "missions")
-        #endregion
+            if amounts_found:
+                log_debug(f"Processed event `{event}` in category `{category}`")
+                return f"Event: {event}"
 
-        #region Maintenance events (always tracked)
-        if event == "RefuelAll":
-            self.income_tracker.transaction(-entry["Cost"], "maintenance")
-        elif event == "RefuelPartial":
-            self.income_tracker.transaction(-entry["Cost"], "maintenance")
-        elif event == "Repair":
-            self.income_tracker.transaction(-entry["Cost"], "maintenance")
-        elif event == "RepairAll":
-            self.income_tracker.transaction(-entry["Cost"], "maintenance")
-        elif event == "BuyAmmo":
-            self.income_tracker.transaction(-entry["Cost"], "maintenance")
-        elif event == "BuyDrones":
-            self.income_tracker.transaction(-entry["TotalCost"], "maintenance")
-        elif event == "SellDrones":
-            self.income_tracker.transaction(-entry["TotalSale"], "maintenance")
-        elif event == "RestockVehicle":
-            self.income_tracker.transaction(-entry["Cost"], "maintenance")
-        elif event == "Resurrect":
-            self.income_tracker.transaction(-entry["Cost"], "maintenance")
-        #endregion
-
-        # Docking events are no longer needed for rate calculation
-        # (Hourly rates are now calculated based on actual transaction timing)
-
-        # Log certain events for debugging
-        if event in ['MarketSell', 'MarketBuy', 'MissionCompleted', 'RedeemVoucher', 'SellExplorationData', 'Credits']:
-            log_debug(f"Income Tracker detected {event} event")
-            return f"Event: {event}"
-
+        log_debug(f"Skipping unknown or untracked event: {event}")
         return None
 
-    def process_dashboard_entry(self, cmdr: str, is_beta: bool, entry: dict) -> None:
-        """
-        Process a status.json entry (dashboard data).
-
-        Args:
-            cmdr: The current commander name
-            is_beta: Whether running in beta mode
-            entry: The status.json entry as a dictionary
-        """
-        # This basic plugin doesn't need to process dashboard entries
+    def process_dashboard_entry(self, cmdr, is_beta, entry):
+        """No dashboard processing needed."""
         pass
