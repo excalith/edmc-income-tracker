@@ -3,7 +3,7 @@
 An Elite Dangerous Market Connector (EDMC) plugin for tracking income and earnings from various activities in Elite Dangerous.
 
 > [!IMPORTANT]
-> This plugin is a work in progress and is not yet ready for production use.
+> This plugin is a work in progress and is not yet ready for production use. You can check the [develop branch](https://github.com/excalith/edmc-income-tracker/tree/develop) for the latest updates.
 
 ## Features
 
