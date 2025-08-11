@@ -41,6 +41,15 @@ def plugin_start3(plugin_dir: str) -> str:
     """
     # Initialize plugin manager
     this.plugin_manager = PluginManager()
+
+    # Log plugin startup
+    try:
+        from src.constants import PLUGIN_NAME, PLUGIN_VERSION
+        from src.utils import log_debug
+        log_debug(f"[VERSIONCODE] Plugin starting - {PLUGIN_NAME} v{PLUGIN_VERSION}")
+    except ImportError:
+        pass
+
     return this.plugin_manager.initialize()
 
 def plugin_stop() -> None:

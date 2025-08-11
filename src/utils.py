@@ -18,15 +18,6 @@ plugin_name = os.path.basename(os.path.dirname(__file__))
 # Set up logging
 logger = logging.getLogger(f'{plugin_name}.{__name__}')
 
-# Configuration keys
-CFG_EARNINGS = "EDMCIncome_earnings"
-CFG_TRACK_TRADING = "EDMCIncome_track_trading"
-CFG_TRACK_COMBAT = "EDMCIncome_track_combat"
-CFG_TRACK_EXPLORATION = "EDMCIncome_track_exploration"
-CFG_TRACK_MISSIONS = "EDMCIncome_track_missions"
-
-CFG_RESET_ON_CLOSE = "EDMCIncome_reset_on_close"
-
 # Module globals
 this = sys.modules[__name__]
 

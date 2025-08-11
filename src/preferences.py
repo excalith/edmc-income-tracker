@@ -7,10 +7,11 @@ from tkinter import ttk
 from config import config
 import myNotebook as nb
 from ttkHyperlinkLabel import HyperlinkLabel
-from src.utils import (
+from src.constants import (
     CFG_TRACK_TRADING, CFG_TRACK_COMBAT, CFG_TRACK_EXPLORATION, CFG_TRACK_MISSIONS,
-    CFG_RESET_ON_CLOSE, get_config_bool, log_debug, log_warning, Tooltip
+    CFG_RESET_ON_CLOSE
 )
+from src.utils import get_config_bool, log_debug, log_warning, Tooltip
 
 
 class PreferencesManager:
@@ -59,10 +60,37 @@ class PreferencesManager:
         frame.columnconfigure(1, weight=1)  # Make second column expandable
 
         # Title
-        HyperlinkLabel(frame, text="EDMC Income Tracker",
-                      url="https://github.com/excalith/edmc-income-tracker",
-                      background=nb.Label().cget('background'),
-                      underline=True).grid(row=0, column=0, columnspan=2, sticky=tk.W, pady=(0, 10))
+        from src.constants import GITHUB_REPO_URL
+        from src.update_checker import check_for_updates
+
+                # Check for updates
+        from src.constants import PLUGIN_VERSION, GITHUB_API_URL
+        log_debug("[VERSIONCODE] Preferences UI: Starting version check...")
+        update_info = check_for_updates(PLUGIN_VERSION, GITHUB_API_URL)
+        log_debug(f"[VERSIONCODE] Preferences UI: Version check result: {update_info}")
+
+        # Create title row
+        title_frame = nb.Frame(frame)
+        title_frame.grid(row=0, column=0, columnspan=2, sticky=tk.W, pady=(0, 10))
+
+        # Main title
+        title_label = HyperlinkLabel(title_frame, text=f"EDMC Income Tracker v{PLUGIN_VERSION}",
+                                   url=GITHUB_REPO_URL,
+                                   background=nb.Label().cget('background'),
+                                   underline=True)
+        title_label.grid(row=0, column=0, sticky=tk.W)
+
+        # Update link (if available)
+        if update_info.get('has_update'):
+            log_debug(f"[VERSIONCODE] Preferences UI: Showing update link for v{update_info['latest_version']}")
+            update_label = HyperlinkLabel(title_frame,
+                                       text=f"(v{update_info['latest_version']} available)",
+                                       url=update_info['download_url'],
+                                       background=nb.Label().cget('background'),
+                                       underline=True)
+            update_label.grid(row=0, column=1, sticky=tk.W, padx=(5, 0))
+        else:
+            log_debug("[VERSIONCODE] Preferences UI: No update available, not showing update link")
 
         #region Plugin Settings
         nb.Label(frame, text="Settings:", font=("TkDefaultFont", 9, "bold")).grid(row=1, column=0, columnspan=2, sticky=tk.W, pady=(0, 5))

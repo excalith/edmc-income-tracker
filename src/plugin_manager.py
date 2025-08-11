@@ -29,6 +29,13 @@ class PluginManager:
         log_debug("EDMC Income Tracker Plugin starting...")
         log_debug("Plugin functions available: plugin_prefs, prefs_changed")
 
+        # Log version checker initialization
+        try:
+            from src.constants import PLUGIN_VERSION
+            log_debug(f"[VERSIONCODE] Plugin Manager: Initializing with version {PLUGIN_VERSION}")
+        except ImportError:
+            pass
+
         # Initialize components
         self.preferences_manager = PreferencesManager()
         self.preferences_manager.load_settings()
@@ -43,7 +50,8 @@ class PluginManager:
         # Initialize journal processor
         self.journal_processor = JournalProcessor(self.income_tracker, self.preferences_manager)
 
-        return "IncomeTracker"
+        from src.constants import PLUGIN_NAME
+        return PLUGIN_NAME
 
     def cleanup(self) -> None:
         """
