@@ -55,16 +55,16 @@ class PreferencesManager:
         # Load current settings first
         self.load_settings()
 
-        # Use nb.Frame instead of tk.Frame for EDMC preferences
+        # nb.Frame for EDMC preferences
         frame = nb.Frame(parent)
-        frame.columnconfigure(1, weight=1)  # Make second column expandable
+        frame.columnconfigure(1, weight=1)
 
         # Title
         from src.constants import GITHUB_REPO_URL
         from src.update_checker import check_for_updates
 
-                # Check for updates
-        from src.constants import PLUGIN_VERSION, GITHUB_API_URL
+        # Check for updates
+        from src.constants import PLUGIN_VERSION, GITHUB_API_URL, PLUGIN_NAME
         log_debug("[VERSIONCODE] Preferences UI: Starting version check...")
         update_info = check_for_updates(PLUGIN_VERSION, GITHUB_API_URL)
         log_debug(f"[VERSIONCODE] Preferences UI: Version check result: {update_info}")
@@ -74,7 +74,7 @@ class PreferencesManager:
         title_frame.grid(row=0, column=0, columnspan=2, sticky=tk.W, pady=(0, 10))
 
         # Main title
-        title_label = HyperlinkLabel(title_frame, text=f"EDMC Income Tracker v{PLUGIN_VERSION}",
+        title_label = HyperlinkLabel(title_frame, text=f"EDMC {PLUGIN_NAME} v{PLUGIN_VERSION}",
                                    url=GITHUB_REPO_URL,
                                    background=nb.Label().cget('background'),
                                    underline=True)
@@ -128,7 +128,6 @@ class PreferencesManager:
         separator.grid(row=4, column=0, columnspan=2, sticky=(tk.W, tk.E), pady=10)
 
         #region Tracker Settings
-        # Track options header
         nb.Label(frame, text="Track Income From:", font=("TkDefaultFont", 9, "bold")).grid(row=5, column=0, columnspan=2, sticky=tk.W, pady=(0, 5))
 
         # Define tracking options with their data
@@ -139,7 +138,7 @@ class PreferencesManager:
             ("Missions", "track_missions", "Track income from Mission Rewards, Community Goal Rewards")
         ]
 
-        # Create checkboxes dynamically
+        # Create checkboxes
         for i, (text, var_name, tooltip_text) in enumerate(tracking_options, start=6):
             # Create the BooleanVar with the cached value
             cached_value = getattr(self, f"cached_{var_name}")

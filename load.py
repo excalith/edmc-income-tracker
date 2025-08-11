@@ -7,7 +7,6 @@ import sys
 from config import config
 
 # Import our modular components
-from src.utils import log_debug
 from src.plugin_manager import PluginManager
 
 # For compatibility with pre-5.0.0
