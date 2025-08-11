@@ -19,3 +19,18 @@ CFG_TRACK_TRADING = "EDMCIncome_track_trading"
 CFG_TRACK_COMBAT = "EDMCIncome_track_combat"
 CFG_TRACK_EXPLORATION = "EDMCIncome_track_exploration"
 CFG_TRACK_MISSIONS = "EDMCIncome_track_missions"
+
+# UI Element States - defines visibility rules for each element
+UI_ELEMENT_STATES = {
+    "title": {"always_show": True},
+    "reset": {"always_show": True},
+    "speed": {"show_in": ["full", "compact"]},
+    "earned": {"show_in": ["full", "compact"]},
+    "maintenance": {"show_in": ["full"]},
+    "total_credits": {"show_in": ["full"], "enabled": "show_total_credits"},
+    "breakdown_toggle": {"show_in": ["full"]},
+	"trading": {"show_in": ["full"], "enabled": "track_trading", "requires": "show_breakdown"},
+	"combat": {"show_in": ["full"], "enabled": "track_combat", "requires": "show_breakdown"},
+	"exploration": {"show_in": ["full"], "enabled": "track_exploration", "requires": "show_breakdown"},
+	"missions": {"show_in": ["full"], "enabled": "track_missions", "requires": "show_breakdown"},
+}

@@ -116,10 +116,9 @@ class PluginManager:
                 self.income_tracker.update_window()
                 self.income_tracker.update_breakdown_visibility()
 
-                # Refresh view mode and total credits visibility if UI manager exists
+                # Refresh UI visibility if UI manager exists
                 if self.ui_manager:
-                    self.ui_manager.refresh_view_mode()
-                    self.ui_manager.refresh_total_credits_visibility()
+                    self.ui_manager.refresh_ui()
             else:
                 log_warning("Income tracker not found, cannot update display")
 
