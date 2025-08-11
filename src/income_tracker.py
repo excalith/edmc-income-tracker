@@ -4,7 +4,7 @@ EDMC Income Tracker Plugin - Core income tracking logic
 
 import time
 from config import config
-from utils import CFG_EARNINGS, Transaction, log_debug, log_event
+from src.utils import CFG_EARNINGS, Transaction, log_debug, log_event
 
 class EDMCIncome:
     """Main class for income tracking"""

@@ -3,11 +3,11 @@ EDMC Income Tracker Plugin - Plugin Manager for component lifecycle
 """
 
 import tkinter as tk
-from utils import log_debug, log_warning
-from preferences import PreferencesManager
-from ui import IncomeTrackerUI
-from income_tracker import EDMCIncome
-from journal_processor import JournalProcessor
+from src.utils import log_debug, log_warning
+from src.preferences import PreferencesManager
+from src.ui import IncomeTrackerUI
+from src.income_tracker import EDMCIncome
+from src.journal_processor import JournalProcessor
 
 
 class PluginManager:

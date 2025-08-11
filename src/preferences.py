@@ -7,10 +7,11 @@ from tkinter import ttk
 from config import config
 import myNotebook as nb
 from ttkHyperlinkLabel import HyperlinkLabel
-from utils import (
+from src.utils import (
     CFG_TRACK_TRADING, CFG_TRACK_COMBAT, CFG_TRACK_EXPLORATION, CFG_TRACK_MISSIONS,
     CFG_RESET_ON_CLOSE, get_config_bool, log_debug, log_warning, Tooltip
 )
+
 
 class PreferencesManager:
     """Manages plugin preferences and settings"""

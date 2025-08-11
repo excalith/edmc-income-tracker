@@ -4,7 +4,7 @@ EDMC Income Tracker Plugin - User Interface components
 
 import tkinter as tk
 from l10n import Locale
-from utils import log_debug, log_warning
+from src.utils import log_debug, log_warning
 
 class IncomeTrackerUI:
     """Manages the main application UI"""

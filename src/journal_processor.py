@@ -2,7 +2,7 @@
 EDMC Income Tracker Plugin - Journal entry processing
 """
 
-from utils import log_debug
+from src.utils import log_debug
 
 class JournalProcessor:
     """Handles processing of Elite Dangerous journal entries"""
