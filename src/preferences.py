@@ -4,9 +4,9 @@ EDMC Income Tracker Plugin - Preferences and configuration management
 
 import tkinter as tk
 from tkinter import ttk
-from config import config
-import myNotebook as nb
-from ttkHyperlinkLabel import HyperlinkLabel
+from config import config # type: ignore
+import myNotebook as nb # type: ignore
+from ttkHyperlinkLabel import HyperlinkLabel # type: ignore
 from src.constants import (
     CFG_TRACK_TRADING, CFG_TRACK_COMBAT, CFG_TRACK_EXPLORATION, CFG_TRACK_MISSIONS,
     CFG_RESET_ON_CLOSE, CFG_SHOW_TOTAL_CREDITS, GITHUB_REPO_URL, PLUGIN_VERSION, GITHUB_API_URL, PLUGIN_NAME

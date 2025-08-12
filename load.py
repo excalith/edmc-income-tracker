@@ -4,7 +4,7 @@ EDMC Income Tracker Plugin - Track your income and earnings in Elite Dangerous
 
 import tkinter as tk
 import sys
-from config import config
+from config import config # type: ignore
 
 # Import our modular components
 from src.plugin_manager import PluginManager

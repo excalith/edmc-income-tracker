@@ -2,7 +2,7 @@
 EDMC Income Tracker Plugin - Standalone version checking
 """
 
-import requests
+import requests # type: ignore
 import logging
 
 # Get logger for this module

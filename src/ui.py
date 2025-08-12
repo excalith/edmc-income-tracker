@@ -3,7 +3,7 @@ EDMC Income Tracker Plugin - Main UI
 """
 
 import tkinter as tk
-from l10n import Locale
+from l10n import Locale # type: ignore
 from src.utils import log_debug
 from src.constants import UI_ELEMENT_STATES, DEBUG_MODE
 
