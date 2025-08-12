@@ -8,10 +8,6 @@ import sys
 import time
 import tkinter as tk
 
-# Debug settings
-DEBUG_MODE = True
-
-
 # Plugin information
 plugin_name = os.path.basename(os.path.dirname(__file__))
 

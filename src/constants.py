@@ -6,6 +6,9 @@ EDMC Income Tracker Plugin - Constants and configuration
 PLUGIN_NAME = "Income Tracker"
 PLUGIN_VERSION = "0.1.0"
 
+# Debug settings
+DEBUG_MODE = True
+
 # URLs
 GITHUB_REPO_URL = "https://github.com/excalith/edmc-income-tracker"
 GITHUB_API_URL = "https://api.github.com/repos/excalith/edmc-income-tracker/releases/latest"
