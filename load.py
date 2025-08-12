@@ -5,22 +5,10 @@ EDMC Income Tracker Plugin - Track your income and earnings in Elite Dangerous
 import tkinter as tk
 import sys
 from config import config # type: ignore
+from src.utils import log_info, log_error, log_warning, log_debug, log_critical
 
 # Import our modular components
 from src.plugin_manager import PluginManager
-
-# For compatibility with pre-5.0.0
-if not hasattr(config, 'get_int'):
-    config.get_int = config.getint
-
-if not hasattr(config, 'get_str'):
-    config.get_str = config.get
-
-if not hasattr(config, 'get_bool'):
-    config.get_bool = lambda key: bool(config.getint(key))
-
-if not hasattr(config, 'get_list'):
-    config.get_list = config.get
 
 # Module globals
 this = sys.modules[__name__]
@@ -38,25 +26,36 @@ def plugin_start3(plugin_dir: str) -> str:
     Returns:
         Plugin name to be displayed in the EDMC status bar
     """
-    # Initialize plugin manager
-    this.plugin_manager = PluginManager()
-
-    # Log plugin startup
     try:
         from src.constants import PLUGIN_NAME, PLUGIN_VERSION
         from src.utils import log_debug
         log_debug(f"[VERSIONCODE] Plugin starting - {PLUGIN_NAME} v{PLUGIN_VERSION}")
-    except ImportError:
-        pass
+    except ImportError as e:
+        log_critical(f"Failed to import constants or utils: {e}")
 
-    return this.plugin_manager.initialize()
+    # Initialize plugin manager
+    this.plugin_manager = PluginManager()
+
+    try:
+        result = this.plugin_manager.initialize()
+        log_info(f"Plugin initialized successfully: {result}")
+        return result
+    except Exception as e:
+        log_error(f"Plugin initialization failed: {e}")
+        return "Initialization failed"
 
 def plugin_stop() -> None:
     """
     Stop the plugin. This is called when EDMC is shutting down.
     """
     if this.plugin_manager:
-        this.plugin_manager.cleanup()
+        try:
+            this.plugin_manager.cleanup()
+            log_info("Plugin stopped and cleaned up successfully")
+        except Exception as e:
+            log_error(f"Error during plugin cleanup: {e}")
+    else:
+        log_warning("plugin_stop() called but plugin_manager is None")
 
 def plugin_app(parent: tk.Frame) -> tk.Frame:
     """
@@ -77,8 +76,16 @@ def plugin_prefs(parent, cmdr, is_beta):
     Create the plugin's preferences/settings panel.
     """
     if this.plugin_manager:
-        return this.plugin_manager.create_preferences_ui(parent)
-    return None
+        try:
+            ui = this.plugin_manager.create_preferences_ui(parent)
+            log_debug("Preferences UI created")
+            return ui
+        except Exception as e:
+            log_error(f"Failed to create preferences UI: {e}")
+            return None
+    else:
+        log_warning("plugin_prefs() called but plugin_manager is None")
+        return None
 
 def prefs_changed(cmdr, is_beta):
     """

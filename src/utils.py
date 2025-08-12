@@ -27,20 +27,28 @@ class Transaction:
 def get_config_bool(config, key: str, default: bool = True) -> bool:
     """Get boolean config value with fallback"""
     if config.get_int(key) is not None:
-        return bool(config.getint(key))
+        return bool(config.get_int(key))
     return default
 
-def log_event(event_name: str, earnings: float, category: str) -> None:
-    """Log a transaction event"""
-    logger.debug(f"Income Tracker: Transaction recorded: {earnings:,.0f} Cr ({category})")
-
-def log_debug(message: str) -> None:
-    """Log debug message"""
-    logger.debug(message)
+def log_info(message: str) -> None:
+    """Log info message"""
+    logger.info(f"[Income Tracker - Info] {message}")
 
 def log_warning(message: str) -> None:
     """Log warning message"""
-    logger.warning(message)
+    logger.warning(f"[Income Tracker - Warning] {message}")
+
+def log_error(message: str) -> None:
+    """Log error message"""
+    logger.error(f"[Income Tracker - Error] {message}")
+
+def log_critical(message: str) -> None:
+    """Log critical message"""
+    logger.critical(f"[Income Tracker - Critical] {message}")
+
+def log_debug(message: str) -> None:
+    """Log debug message"""
+    logger.debug(f"[Income Tracker - Debug] {message}")
 
 class Tooltip:
     """Tooltip widget using tkinter's built-in functionality"""

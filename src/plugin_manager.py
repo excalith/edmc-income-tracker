@@ -3,7 +3,7 @@ EDMC Income Tracker Plugin - Plugin Manager for component lifecycle
 """
 
 import tkinter as tk
-from src.utils import log_debug, log_warning
+from src.utils import log_debug, log_warning, log_critical
 from src.preferences import PreferencesManager
 from src.ui import IncomeTrackerUI
 from src.income_tracker import EDMCIncome
@@ -34,6 +34,7 @@ class PluginManager:
             from src.constants import PLUGIN_VERSION
             log_debug(f"[VERSIONCODE] Plugin Manager: Initializing with version {PLUGIN_VERSION}")
         except ImportError:
+            log_critical("Failed to import constants or utils")
             pass
 
         # Initialize components

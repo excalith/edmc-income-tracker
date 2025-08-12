@@ -5,7 +5,7 @@ EDMC Income Tracker Plugin - Core income tracking logic
 import time
 from config import config # type: ignore
 from src.constants import CFG_EARNINGS
-from src.utils import Transaction, log_debug, log_event
+from src.utils import Transaction, log_debug
 
 class EDMCIncome:
     """Main class for income tracking"""
@@ -48,7 +48,7 @@ class EDMCIncome:
         log_debug(f"Total transactions: {len(self.transactions)}")
         self.update_window()
         self.save()
-        log_event("transaction", earnings, category)
+        log_debug(f"Transaction recorded: {earnings:,.0f} Cr ({category})")
 
     # Docking events are no longer needed - hourly rates are calculated
     # based on actual transaction timing, not docking events
