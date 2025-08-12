@@ -36,13 +36,13 @@ class PreferencesManager:
         # Create label
         label = nb.Label(frame, text=text)
         label.grid(row=self.current_row, column=0, sticky=tk.W, pady=(0, 5))
+        if tooltip_text:
+            Tooltip(label, tooltip_text)
 
         # Create dropdown
         dropdown = nb.OptionMenu(frame, variable, variable.get(), *options)
         dropdown.grid(row=self.current_row, column=1, sticky=tk.W, pady=(0, 5))
 
-        if tooltip_text:
-            Tooltip(dropdown, tooltip_text)
 
         # Auto-increment row for next element
         self.current_row += 1
@@ -206,7 +206,7 @@ class PreferencesManager:
             "View Mode:",
             self.view_mode,
             view_mode_options.values(),
-            "Full: Shows all information including maintenance and category breakdown\nCompact: Shows only essential information (title, reset, hourly, income)"
+            "Full: Shows all information including maintenance and category breakdown\n\nCompact: Shows only essential information (title, reset, hourly, income)"
         )
 
         # Show Total Credits option
@@ -224,7 +224,7 @@ class PreferencesManager:
             frame,
             "Reset data on close",
             self.reset_on_close,
-            "When enabled, all current session earnings will be reset when EDMC is closed.\nWhen disabled, earnings persist between sessions.",
+            "Enabled: All current session earnings will be reset when EDMC is closed.\n\nDisabled: Earnings persist between sessions.",
             columnspan=2
         )
         #endregion
@@ -236,10 +236,10 @@ class PreferencesManager:
 
         # Define tracking options with their data
         tracking_options = [
-            ("Trading", "track_trading", "Track income from Buying/Selling Commodities and Trade Data purchases"),
-            ("Combat", "track_combat", "Track income from Bounty Vouchers, Combat Bonds, and other combat-related rewards"),
-            ("Exploration", "track_exploration", "Track income from selling Exploration Data, including bonuses for first discoveries"),
-            ("Missions", "track_missions", "Track income from Mission Rewards, Community Goal Rewards")
+            ("Trading", "track_trading", "Track income from:\nBuying/Selling Commodities\nTrade Data purchases"),
+            ("Combat", "track_combat", "Track income from:\nBounty Vouchers and Combat Bonds\nPaying Fines and Bounties"),
+            ("Exploration", "track_exploration", "Track income from:\nBuying/Selling Exploration Data, including bonuses for first discoveries"),
+            ("Missions", "track_missions", "Track income from:\nMission Rewards and Fail Penalties\nCommunity Goal Rewards")
         ]
 
         # Create checkboxes
