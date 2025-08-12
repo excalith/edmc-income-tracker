@@ -5,15 +5,16 @@ EDMC Income Tracker Plugin - Main UI
 import tkinter as tk
 from l10n import Locale
 from src.utils import log_debug
-from src.constants import UI_ELEMENT_STATES
+from src.constants import UI_ELEMENT_STATES, DEBUG_MODE
 
 
 class IncomeTrackerUI:
     """Manages the main application UI"""
 
-    def __init__(self, income_tracker, preferences_manager):
+    def __init__(self, income_tracker, preferences_manager, journal_processor=None):
         self.income_tracker = income_tracker
         self.preferences = preferences_manager
+        self.journal_processor = journal_processor
 
     #region UI creation helpers
     def _create_title_and_reset(self, frame):
@@ -123,8 +124,25 @@ class IncomeTrackerUI:
         for i, cat in enumerate(categories, start=6):
             self._create_income_row(frame, cat.capitalize(), cat, i)
 
+        # Make sure the income labels are up-to-date
         self._update_element_visibility()
         self.income_tracker.update_window()
+
+        # --- DEBUG MODE ---
+
+        if DEBUG_MODE:
+            log_debug("DEBUG: DEBUG_MODE is True, creating debug interface")
+            from src.debug.debug import DebugInterface
+            debug_ui = DebugInterface(
+                journal_processor=self.journal_processor,
+                income_tracker=self.income_tracker
+            )
+            debug_frame = debug_ui.create_debug_frame(frame)
+            debug_frame.grid(row=99, column=0, columnspan=3, pady=(10, 0), sticky=tk.W)
+            log_debug("DEBUG: Debug interface created and added to UI")
+        else:
+            log_debug("DEBUG: DEBUG_MODE is False, skipping debug interface")
+
         return frame
     #endregion
 
@@ -198,4 +216,5 @@ class IncomeTrackerUI:
     def refresh_ui(self):
         log_debug("Refreshing UI visibility")
         self._update_element_visibility()
+        self._update_category_widgets()
     #endregion

@@ -1,0 +1,8 @@
+{
+	"timestamp": "2016-06-10T14:32:03Z",
+	"event": "MarketBuy",
+	"Type": "foodcartridges",
+	"Count": 10,
+	"BuyPrice": 50,
+	"TotalCost": 500
+}

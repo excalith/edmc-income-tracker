@@ -7,7 +7,7 @@ PLUGIN_NAME = "Income Tracker"
 PLUGIN_VERSION = "0.1.0"
 
 # Debug settings
-DEBUG_MODE = True
+DEBUG_MODE = False
 
 # URLs
 GITHUB_REPO_URL = "https://github.com/excalith/edmc-income-tracker"
@@ -41,15 +41,15 @@ UI_ELEMENT_STATES = {
 # Event to category mappings for journal processing
 # Journal Entry Fields
 JOURNAL_FIELDS = {
-    "total_sale":        ["TotalSale"],
-    "total_cost":        ["TotalCost"],
-    "cost":              ["Cost"],
-    "amount":            ["Amount"],
-    "total_earnings":    ["TotalEarnings"],
-    "reward":            ["Reward"],
-    "donation":          ["Donation"],
-    "fine":              ["Fine"],
-    "price":             ["Price"],
+    "total_sale":     "TotalSale",
+    "total_cost":     "TotalCost",
+    "cost":           "Cost",
+    "amount":         "Amount",
+    "total_earnings": "TotalEarnings",
+    "reward":         "Reward",
+    "donation":       "Donation",
+    "fine":           "Fine",
+    "price":          "Price",
 }
 
 # Journal Entry Event Mappings
@@ -74,7 +74,7 @@ JOURNAL_EVENT_CATEGORIES = {
     "missions": {
         "MissionCompleted":     (["donation", "reward"], [-1, 1]),
         "MissionFailed":        (["fine"], [-1]),
-        "MissionAbandoned ":    (["fine"], [-1]),
+        "MissionAbandoned":    (["fine"], [-1]),
         "CommunityGoalReward":  (["reward"], [1]),
     },
     "maintenance": {

@@ -79,10 +79,13 @@ class PluginManager:
             The frame containing our plugin's UI
         """
         # Initialize UI manager
-        self.ui_manager = IncomeTrackerUI(self.income_tracker, self.preferences_manager)
+        self.ui_manager = IncomeTrackerUI(self.income_tracker, self.preferences_manager, self.journal_processor)
 
         # Update income tracker with UI reference
         self.income_tracker.ui = self.ui_manager
+
+        # Add journal_processor to income_tracker so UI can access it for debug
+        self.income_tracker.journal_processor = self.journal_processor
 
         # Create and return the UI
         return self.ui_manager.create_main_ui(parent)
