@@ -45,6 +45,8 @@ JOURNAL_FIELDS = {
     "total_earnings":    ["TotalEarnings"],
     "reward":            ["Reward"],
     "donation":          ["Donation"],
+    "fine":              ["Fine"],
+    "price":             ["Price"],
 }
 
 # Journal Entry Event Mappings
@@ -53,20 +55,25 @@ JOURNAL_EVENT_CATEGORIES = {
         "MarketSell":    (["total_sale"], [1]),
         "MarketBuy":     (["total_cost"], [-1]),
         "BuyTradeData":  (["cost"], [-1]),
+        "SellMicroResources": (["price"], [1]),
     },
     "combat": {
-        "RedeemVoucher": (["amount"], [1]),
+        "RedeemVoucher":    (["amount"], [1]),
+        "FactionKillBond":  (["reward"], [1]),
+        "PayBounties":      (["amount"], [-1]),
+        "PayFines":         (["amount"], [-1]),
     },
     "exploration": {
-        "SellExplorationData": (["total_earnings"], [1]),
-        "BuyExplorationData":  (["cost"], [-1]),
+        "SellExplorationData":       (["total_earnings"], [1]),
+        "MultiSellExplorationData":  (["total_earnings"], [1]),
+        "BuyExplorationData":        (["cost"], [-1]),
     },
     "missions": {
-        # Donation negative, Reward positive. Both are supported if present.
-        "MissionCompleted": (["donation", "reward"], [-1, 1]),
-        "CommunityGoalReward": (["reward"], [1]),
+        "MissionCompleted":     (["donation", "reward"], [-1, 1]),
+        "MissionFailed":        (["fine"], [-1]),
+        "MissionAbandoned ":    (["fine"], [-1]),
+        "CommunityGoalReward":  (["reward"], [1]),
     },
-    # maintenance: always tracked (no preference toggle)
     "maintenance": {
         "RefuelAll":      (["cost"], [-1]),
         "RefuelPartial":  (["cost"], [-1]),

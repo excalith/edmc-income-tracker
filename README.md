@@ -20,5 +20,6 @@ An Elite Dangerous Market Connector (EDMC) plugin for tracking income and earnin
 3. Restart EDMC to reload the plugins
 
 ## Journal Events References
+- [Elite Dangerous Journal Schemas](https://jixxed.github.io/ed-journal-schemas)
 - [Elite Journal](https://elite-journal.readthedocs.io)
 - [EDCodex](https://edcodex.info/?m=doc)
