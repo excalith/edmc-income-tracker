@@ -1,0 +1,17 @@
+{
+	"timestamp": "2016-06-10T14:32:03Z",
+	"event": "SellExplorationData",
+	"Systems": [
+		"HIP 78085",
+		"Praea Euq NW-W b1-3"
+	],
+	"Discovered": [
+		"HIP 78085 A",
+		"Praea Euq NW-W b1-3",
+		"Praea Euq NW-W b1-3 3 a",
+		"Praea Euq NW-W b1-3 3"
+	],
+	"BaseValue": 700,
+	"Bonus": 300,
+	"TotalEarnings": 1000
+}

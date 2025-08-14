@@ -1,0 +1,9 @@
+{
+	"timestamp": "2016-06-10T14:32:03Z",
+	"event": "MarketSell",
+	"Type": "agriculturalmedicines",
+	"Count": 10,
+	"SellPrice": 100,
+	"TotalSale": 1000,
+	"AvgPricePaid": 100
+}
