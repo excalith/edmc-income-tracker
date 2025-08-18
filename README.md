@@ -1,6 +1,8 @@
-# EDMC Income Tracker Plugin
-
-An Elite Dangerous Market Connector (EDMC) plugin for tracking income and earnings from various activities in Elite Dangerous.
+<div align="center">
+	<h1 align="center">EDMC Income Tracker</h1>
+	<p align="center">An <a href="https://github.com/EDCD/EDMarketConnector">EDMC</a> plugin for tracking income and earnings from various sources in Elite Dangerous</p>
+	<img src=".github/splash.png" />
+</div>
 
 ## Features
 
@@ -9,6 +11,21 @@ An Elite Dangerous Market Connector (EDMC) plugin for tracking income and earnin
 - Persistent earnings tracking across sessions
 - Configurable display options
 - Category breakdown view for Trading, Exploration, Combat, and Missions
+
+<details>
+<summary><b>Tracked Events</b></summary>
+<br />
+<b>Trading:</b>
+<pre>MarketSell, MarketBuy, BuyTradeData, SellMicroResources</pre>
+<b>Combat:</b>
+<pre>RedeemVoucher, FactionKillBond, PayBounties, PayFines</pre>
+<b>Exploration:</b>
+<pre>SellExplorationData, MultiSellExplorationData, BuyExplorationData</pre>
+<b>Missions:</b>
+<pre>MissionCompleted, MissionFailed, MissionAbandoned, CommunityGoalReward</pre>
+<b>Maintenance:</b>
+<pre>RefuelAll, RefuelPartial, Repair, RepairAll, BuyAmmo, BuyDrones, SellDrones, RestockVehicle, Resurrect</pre>
+</details>
 
 ## Installation
 
