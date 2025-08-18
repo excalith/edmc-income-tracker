@@ -51,6 +51,9 @@ class PluginManager:
         # Initialize journal processor
         self.journal_processor = JournalProcessor(self.income_tracker, self.preferences_manager)
 
+        # Load state
+        self.income_tracker.load_state(self.preferences_manager.cached_reset_on_close)
+
         from src.constants import PLUGIN_NAME
         return PLUGIN_NAME
 
@@ -67,6 +70,7 @@ class PluginManager:
                 self.income_tracker.reset()
                 log_debug("Income Tracker data cleared on app close (all sessions)")
             else:
+                self.income_tracker.save_state()
                 log_debug("Income Tracker data NOT cleared on app close due to preference")
 
     def setup_ui(self, parent: tk.Frame) -> tk.Frame:
@@ -118,7 +122,6 @@ class PluginManager:
             if self.income_tracker:
                 log_debug("Updating display after preferences change")
                 self.income_tracker.update_window()
-                self.income_tracker.update_breakdown_visibility()
 
                 # Refresh UI visibility if UI manager exists
                 if self.ui_manager:

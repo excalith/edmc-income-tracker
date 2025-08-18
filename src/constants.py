@@ -2,12 +2,13 @@
 EDMC Income Tracker Plugin - Constants and configuration
 """
 
-# Plugin information
-PLUGIN_NAME = "Income Tracker"
-PLUGIN_VERSION = "0.1.0"
-
 # Debug settings
 DEBUG_MODE = False
+
+# Plugin information
+PLUGIN_NAME = "Income Tracker"
+PLUGIN_TECH_NAME = "EDMCIncomeTracker"
+PLUGIN_VERSION = "0.1.0"
 
 # URLs
 GITHUB_REPO_URL = "https://github.com/excalith/edmc-income-tracker"
@@ -15,13 +16,14 @@ GITHUB_API_URL = "https://api.github.com/repos/excalith/edmc-income-tracker/rele
 #GITHUB_API_URL = "https://api.github.com/repos/excalith/excalith-start-page/releases/latest" #TEST URL WITH RELEASES
 
 # Configuration Keys
-CFG_EARNINGS = "EDMCIncome_earnings"
-CFG_RESET_ON_CLOSE = "EDMCIncome_reset_on_close"
-CFG_SHOW_TOTAL_CREDITS = "EDMCIncome_show_total_credits"
-CFG_TRACK_TRADING = "EDMCIncome_track_trading"
-CFG_TRACK_COMBAT = "EDMCIncome_track_combat"
-CFG_TRACK_EXPLORATION = "EDMCIncome_track_exploration"
-CFG_TRACK_MISSIONS = "EDMCIncome_track_missions"
+CFG_SESSION_STATE = f"{PLUGIN_TECH_NAME}_session_state"
+CFG_EARNINGS = f"{PLUGIN_TECH_NAME}_earnings"
+CFG_RESET_ON_CLOSE = f"{PLUGIN_TECH_NAME}_reset_on_close"
+CFG_SHOW_TOTAL_CREDITS = f"{PLUGIN_TECH_NAME}_show_total_credits"
+CFG_TRACK_TRADING = f"{PLUGIN_TECH_NAME}_track_trading"
+CFG_TRACK_COMBAT = f"{PLUGIN_TECH_NAME}_track_combat"
+CFG_TRACK_EXPLORATION = f"{PLUGIN_TECH_NAME}_track_exploration"
+CFG_TRACK_MISSIONS = f"{PLUGIN_TECH_NAME}_track_missions"
 
 # UI Element States - defines visibility rules for each element
 UI_ELEMENT_STATES = {
