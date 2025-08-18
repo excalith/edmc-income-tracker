@@ -76,6 +76,17 @@ class IncomeTrackerUI:
             elif not req_value:  # Covers missing attributes
                 return False
 
+        # For any element that doesn't always show, hide it if no tracking is enabled
+        if not state.get("always_show", False):
+            has_tracking = any([
+                self.preferences.cached_track_trading,
+                self.preferences.cached_track_combat,
+                self.preferences.cached_track_exploration,
+                self.preferences.cached_track_missions
+            ])
+            if not has_tracking:
+                return False
+
         return True
 
 
@@ -86,8 +97,15 @@ class IncomeTrackerUI:
             element.grid_remove()
 
     def _update_element_visibility(self, force_hide=False):
+        log_debug(f"_update_element_visibility called with force_hide={force_hide}")
         for name in UI_ELEMENT_STATES:
-            visible = False if force_hide else self._should_show_element(name)
+            if force_hide:
+                # When force hiding, only show elements that always_show
+                state = UI_ELEMENT_STATES.get(name, {})
+                visible = state.get("always_show", False)
+            else:
+                visible = self._should_show_element(name)
+
             label = getattr(self, f'{name}_label', None)
             widget = getattr(self, f'{name}_widget', None)
             element = getattr(self, name, None)
@@ -152,26 +170,33 @@ class IncomeTrackerUI:
         if not self.income_tracker:
             return
 
-        if any([
+        has_tracking = any([
             self.preferences.cached_track_trading,
             self.preferences.cached_track_combat,
             self.preferences.cached_track_exploration,
             self.preferences.cached_track_missions
-        ]):
+        ])
+
+        if has_tracking:
+            # STATE 1: Show normal UI, hide "no sources" message
+            if hasattr(self, 'no_sources_label'):
+                self.no_sources_label.grid_remove()
             self._update_element_visibility()
             self._update_all_values()
         else:
+            # STATE 2: Hide normal UI, show "no sources" message
+            self._update_element_visibility(force_hide=True)
             self._show_no_sources_message()
 
         log_debug("Display updated")
 
     def _show_no_sources_message(self):
-        self._update_element_visibility(force_hide=True)
         if not hasattr(self, 'no_sources_label'):
             parent = getattr(self, 'title_label', None).master if hasattr(self, 'title_label') else None
             if parent:
                 self.no_sources_label = tk.Label(parent, text="No income sources are tracked")
-        self.no_sources_label.grid(row=1, column=0, columnspan=3, pady=(5, 10), sticky=tk.W)
+        if hasattr(self, 'no_sources_label'):
+            self.no_sources_label.grid(row=15, column=0, columnspan=3, pady=(5, 10), sticky=tk.W)
 
     def _update_all_values(self):
         if hasattr(self, 'speed_widget'):
